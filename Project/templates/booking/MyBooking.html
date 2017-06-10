@@ -1,0 +1,122 @@
+{% extends 'booking/base.html' %}
+{% load static %}
+{% block styles %}
+<link rel="stylesheet" type="text/css" href="{% static 'booking/booking.css' %}" />
+<link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.9/css/jquery.dataTables.min.css"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.2.0/jquery-confirm.min.css">
+{{ block.super }}
+{% endblock %}
+
+{% block js %}
+{{ block.super }}
+<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/jeditable.js/1.7.3/jeditable.min.js"></script>
+<script type="text/javascript" src="//cdn.datatables.net/1.10.9/js/jquery.dataTables.min.js"></script>
+<script type="text/javascript" src="{% static 'booking/datatableview.js' %}"></script>
+<script type="text/javascript" src="{% static 'booking/jquery.dataTables.editable.js' %}"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.2.0/jquery-confirm.min.js"></script>
+{% endblock %}
+{% block menu %}
+         <div id="menu">
+            <a id="menu3" href="/booking/ViewCalendar"></a>
+            <a id="menu1" href="/booking/MyBooking" class="selected"></a>
+            <a id="menu2" href="/booking/NewBooking"></a>
+            <a id="menu5" href="/booking/ManageUser" class="hide"></a>
+            <a id="menu4" href="/booking/ManageBooking" class="hide"></a>
+         </div>
+{% endblock %}
+{% block content %}
+<div id="padding30">
+    {{ datatable }}
+</div>
+<script>
+    datatableview.auto_initialize = false;
+
+    $(function(){
+        //initialize datatable
+        var common_options = {};
+        datatableview.initialize($('.datatable'), {
+            searching: false,
+            rowGroup: {
+                dataSrc: -2
+                },
+            "columnDefs": 
+            [
+                  {
+                    "targets": -1,
+                    "data": null,
+                    // "defaultContent": '<button class="btn btn-danger" data-toggle="confirmation">Cancel</button>',
+                    render: function ( data, type, row ) {
+                      if (data[10] != "Cancel" && data[10] != "Reject") {
+                          return '<button class="btn btn-danger" name="cancel" data-toggle="confirmation">Cancel</button>';
+                      }
+                      else{
+                        return "";
+                      }
+                    }
+                  },
+                  { width: "7%", targets: 1 },
+                  { width: "7%", targets: 2 },
+                  { width: "7%", targets: 3 },
+            ]
+        });
+
+        //cancel booking 
+        var table = $('#table').DataTable( {} );
+        $('.datatable tbody').on( 'click', 'button', function () {
+            var id = $(this).closest('tr').prop('id');
+            $('[data-toggle=confirmation]').confirm({
+				    title: 'Cancel Booking Confirmation',
+				    content: 'Are you sure you want to cancel this booking?',
+				    type: 'red',
+    				typeAnimated: true,
+				    buttons: {
+				        confirm: function (event) {
+		                    $.ajax({
+		                        type : "POST", // http method
+		                        url: "",
+		                        data : { 
+		                            booking_id: id ,
+		                            booking_status : "Cancel",
+		                            csrfmiddlewaretoken: '{{ csrf_token }}',
+		                        }, // data sent with the post request
+
+		                        // handle a successful response
+		                        success : function(json) { 
+		                            $("#canceledModal").modal();
+		                            console.log("Booking canceled");
+		                            location.reload();
+		                        },
+
+		                        // handle a non-successful response
+		                        error : function (xhr, ajaxOptions, thrownError) {
+		                            alert("Cancelation fail");
+		                        }
+		                      });
+		                } ,
+				        cancel: function () {
+                  location.reload();
+				        }
+				    }
+				});
+      });
+    });
+</script>
+
+  <!-- Modal -->
+<div class="modal fade" id="canceledModal" role="dialog">
+  <div class="modal-dialog modal-sm">
+    <div class="modal-content">
+      <div class="modal-header bg-warning" id="booking-model">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Canceled</h4>
+      </div>
+      <div class="modal-body">
+        <p id="errorMsg">Your booking has been canceled.</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

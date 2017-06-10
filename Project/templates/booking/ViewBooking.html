@@ -1,0 +1,115 @@
+{% extends 'booking/base.html' %}
+{% load fullcalendar_tags %}
+{% load static %}
+{% block styles %}
+<link rel="stylesheet" type="text/css" href="{% static 'booking/schedule.css' %}" />
+<link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/qtip2/3.0.3/jquery.qtip.min.css"/>
+    {% fullcalendar_css %}
+    {% fullcalendar_print_css %}
+    {% fullcalendar_scheduler_css %}
+{{ block.super }}
+{% endblock %}
+
+{% block js %}
+{{ block.super }}
+<script type="text/javascript" src="//cdn.jsdelivr.net/qtip2/3.0.3/jquery.qtip.min.js"></script>
+{% fullcalendar_moment %}
+    {% fullcalendar_js %}
+    {% fullcalendar_scheduler_js %}
+<style>
+
+#calendar{
+	font-family: Arial, Helvetica, sans-serif;
+}
+.fc-time-grid-event .fc-content{
+	text-align: center;
+}
+
+/*.fc-time-grid-event .fc-time {
+	font-size: 1.50em;
+}*/
+</style>
+{% endblock %}
+
+{% block menu %}
+         <div id="menu">
+            <a id="menu3" href="/booking/ViewCalendar"></a>
+            <a id="menu1" href="/booking/MyBooking"></a>
+            <a id="menu2" href="/booking/NewBooking"></a>
+            <a id="menu5" href="/booking/ManageUser"></a>
+            <a id="menu4" href="/booking/ManageBooking" class="selected"></a>
+         </div>
+{% endblock %}
+{% block content %}
+<script>
+	$(function() { // document ready
+		$('#calendar').fullCalendar({
+			schedulerLicenseKey: 'CC-Attribution-NonCommercial-NoDerivatives',
+			defaultView: 'listWeek',
+			slotEventOverlap: false,
+			now: moment().format('YYYY-MM-DD'),
+			hiddenDays: [0],
+			editable: false, 
+			aspectRatio: 2.8,
+			minTime: '07:00',
+			allDaySlot: false,
+			eventLimit: true, // allow "more" link when too many events
+			titleFormat: 'dddd, DD MMM YYYY',
+			header: {
+				left: 'prev,next today',
+				center: 'title',
+				right: 'listDay,listWeek'
+			},
+
+			// customize the button names,
+			// otherwise they'd all just say "list"
+			views: {
+				listDay: { buttonText: 'list day' },
+				listWeek: { buttonText: 'list week' }
+			},
+			resourceLabelText: 'Rooms',
+			resources: [
+				{ id: "S", title: 'Small', eventColor: 'blue'},
+				{ id: "M", title: 'Middle', eventColor: 'green' },
+				{ id: "B", title: 'Big', eventColor: 'orange' },
+			],
+			events: [
+			        	{% for i in booking %}
+                        {	
+			             	resourceId: "{{ i.resourceId }}",
+			                title: "{{ i.full_title }} {{resources.title}}",
+			                start: "{{ i.start |date:'Y-m-d H:i'}}",
+			                end: "{{ i.end |date:'Y-m-d H:i'}}",
+			                booked_by: "{{ i.booked_by }}"
+                        },
+			            {% endfor %}
+	        ],
+		    eventRender: function(event, element) {
+
+            	element.find('.fc-title').append("<br/><span style='font-style: italic'>" + event.booked_by + "</span>"); 
+            	element.qtip({
+					content: {
+						text: "Booked by : " + event.booked_by
+					},
+					position: {
+						my: 'bottom center',
+						at: 'top center',
+						target: 'mouse',
+						adjust: {
+							mouse: false
+						}
+					},
+					style: 'qtip-bootstrap'
+				}).qtip('api');
+			}
+		});
+	});
+</script>
+
+<a class="btn btn-info" role="button" href="../ManageBooking/">Change to Manage Booking</a>
+<a class="btn btn-primary" role="button" href="../HistoryBooking/">History</a>
+<div class = "container" style="padding-top:3%; ">
+
+{% calendar %}
+</div>
+{% endblock %}

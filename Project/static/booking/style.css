@@ -1,0 +1,257 @@
+html
+{
+    background:#fff;
+	height:100%;
+	min-height:100%;
+}
+
+body
+{
+	padding:0px;
+	margin:0px;
+}
+/* end html template */
+
+/*    MENU     */
+#menu
+{	width:100%; height:38px; padding:0;
+	 
+}
+#menu a {display: block;height:34px; }
+
+#menu1
+{
+	width:123px;
+	background:url(./Images/my_bookings.png) no-repeat top left;
+	float:left;
+}
+#menu1:hover, #menu1.selected
+{
+	background:url(./Images/my_bookings.png) no-repeat bottom left;
+}
+
+#menu2
+{
+	width:123px;
+	background:url(./Images/new_bookings.png) no-repeat top left;
+	float:left;
+}
+#menu2:hover, #menu2.selected
+{
+	background:url(./Images/new_bookings.png) no-repeat bottom left;
+}
+
+#menu3
+{
+	width:123px;
+	background:url(./Images/view_calendar.png) no-repeat top left;
+	float:left;
+}
+#menu3:hover, #menu3.selected
+{
+	background:url(./Images/view_calendar.png) no-repeat bottom left;
+}
+#menu4
+{
+	width:123px;
+	background:url(./Images/manage_bookings.png) no-repeat top left;
+	float:right;
+}
+#menu4:hover, #menu4.selected
+{
+	background:url(./Images/manage_bookings.png) no-repeat bottom left;
+}
+#menu5
+{
+	width:123px;
+	background:url(./Images/manage_user.png) no-repeat top left;
+	float:right;
+}
+#menu5:hover, #menu5.selected
+{
+	background:url(./Images/manage_user.png) no-repeat bottom left;
+}
+
+
+#menu{
+list-style:none;  /*--- Makes the bullets go away ---*/
+	margin:0;  /*--- Take out any default margin on the UL tag ---*/
+	padding:0;  /*--- Take out any default padding on the UL tag ---*/
+	width:100%; 
+	height:34px;
+}
+
+#menu li{
+	float:left;  /*--- Make the list go horizontal ---*/
+	margin:0;
+}
+
+#menu li a{
+	display:block;  /*--- Make the entire button are clickable rather than the text alone ---*/
+	text-indent: -9999px; /*--- Push the text off screen to hide text---*/
+	overflow: hidden; /*--- Makes text outside of bounding box hidden ---*/
+	height:34px;
+}
+
+/* 
+The following rules place the "normal" 
+state image as the background for our anchor tags
+*/
+
+#menu li#my_bookings a{
+	background: url(../Images/my_bookings.png) no-repeat;
+	width:123px;
+	
+}
+
+#menu li#new_bookings a{
+	background: url(../Images/new_bookings.png) no-repeat;	
+	width:123px;
+	
+}
+
+/* 
+The following rules place the "over" 
+state image as the background for our anchor tags
+when they are hovered over by the mouse
+*/
+
+#menu li#my_bookings a:hover{
+	background: url(../Images/my_bookings.png) no-repeat bottom left;	
+}
+#menu li#new_bookings a:hover{
+	background: url(../Images/new_bookings.png) no-repeat bottom left;	
+}
+
+.clear{
+	clear:both;  /*--- Clears the float of the list items to restore normal document flow ---*/
+}
+
+/* 
+The following rules place the "down" 
+state image as the background for our anchor tags
+when they anchor tag has the class of current
+*/
+
+#menu li#my_bookings a.current{
+	background: url(../Images/my_bookings.png) no-repeat bottom left;	
+	cursor:default;
+}
+#menu li#new_bookings a.current{
+	background: url(../Images/new_bookings.png) no-repeat bottom left;	
+	cursor:default;
+}
+#right-menu a
+{
+	text-align:right;
+	font-size:12px;
+	color:#3C3C3C;
+	height:20px;
+	display: block;
+	padding-right:5px;
+}
+
+
+
+/* end menu css */
+
+#content
+{
+	text-align:left;
+	width:100%;
+	min-width:960px;
+	margin:auto;
+	padding:0px;
+	background-color:#fff;
+	min-height:500px;
+}
+
+#content .pager span { color: #78bc1c; font-size: 12px}
+
+#padding30
+{
+	padding:25px 0px;
+	margin:0px 5px;
+}
+
+a
+{
+	text-decoration:none;
+	color:#969594;
+}
+a:hover
+{
+	color:#78bc1c;
+}
+
+img
+{
+	border:0;
+}
+
+.header
+{
+	width:100%;
+	height:55px;
+	background-image:url(Images/header.jpg);
+	background-repeat:no-repeat;
+}
+
+.hide{
+	visibility: hidden;
+}
+
+
+#notification
+{
+	display: flex;
+	border-radius: 5px;
+	float:right;
+	display:inline-block;
+	clear:both;
+	background-color: #F5B7B1;
+}
+#blink {
+	float:left;
+  	animation: blinker 2s linear infinite;
+	font-style: italic;
+	flex: 1;
+}
+
+#blink a
+{
+	position: relative;
+	text-align: center;
+	vertical-align: middle;
+	padding-top:5px;
+}
+
+#blink a:hover
+{
+	color:#FFFFFF;
+	text-decoration: none;
+	animation: blinker 60s linear;
+}
+
+@keyframes blinker {  
+  	50% { opacity: 0; }
+}
+
+#close {
+    float:left;
+    display:inline-block;
+    padding:2px 5px;
+    background:black;
+    color:#fff;
+    overflow: hidden;
+    flex:1;
+}
+
+#close:hover {
+    float:left;
+    display:inline-block;
+    padding:2px 5px;
+    background:#ccc;
+    color:#fff;
+    cursor:default;
+}

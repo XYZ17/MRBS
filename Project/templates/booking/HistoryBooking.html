@@ -1,0 +1,58 @@
+{% extends 'booking/base.html' %}
+{% load static %}
+{% block styles %}
+<link rel="stylesheet" type="text/css" href="{% static 'booking/booking.css' %}" />
+<link rel="stylesheet" type="text/css" href="{% static 'booking/bootstrap-datetimepicker.css' %}" />
+<link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.9/css/jquery.dataTables.min.css"/>
+<link href="//cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/bootstrap3-editable/css/bootstrap-editable.css" rel="stylesheet"/>
+<link rel="stylesheet" type="text/css" href="//cdn.datatables.net/v/bs/r-2.1.1/rg-1.0.0/se-1.2.2/datatables.min.css"/>
+{{ block.super }}
+{% endblock %}
+
+{% block js %}
+{{ block.super }}
+<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/jeditable.js/1.7.3/jeditable.min.js"></script>
+<script type="text/javascript" src="{% static 'booking/bootstrap-datetimepicker.js' %}"></script>
+<script type="text/javascript" src="{% static 'booking/bootstrap-editable.js' %}"></script>
+<script type="text/javascript" src="//cdn.datatables.net/1.10.9/js/jquery.dataTables.min.js"></script>
+<script type="text/javascript" src="//cdn.datatables.net/v/bs/r-2.1.1/rg-1.0.0/se-1.2.2/datatables.min.js"></script>
+<script type="text/javascript" src="{% static 'booking/datatableview.js' %}"></script>
+<script type="text/javascript" src="{% static 'booking/jquery.dataTables.editable.js' %}"></script>
+{% endblock %}
+{% block menu %}
+         <div id="menu">
+            <a id="menu3" href="/booking/ViewCalendar"></a>
+            <a id="menu1" href="/booking/MyBooking"></a>
+            <a id="menu2" href="/booking/NewBooking"></a>
+            <a id="menu5" href="/booking/ManageUser"></a>
+            <a id="menu4" href="/booking/ManageBooking" class="selected"></a>
+         </div>
+{% endblock %}
+{% block content %}
+<a class="btn btn-info" role="button" href="../ManageBooking/">Back to Manage Booking</a>
+<div id="padding30">
+    {% load tz %}
+    {{ datatable }}
+</div>
+<script>
+    //$.fn.editable.defaults.mode = 'inline';
+    datatableview.auto_initialize = false;
+
+	$(function(){
+        var xeditable_options = {};
+        datatableview.initialize($('.datatable'), {
+            responsive: true,
+            searching: false,
+            rowGroup: {
+                dataSrc: 1
+                },
+                columnDefs: [{ 
+                    className: 'never', 
+                    targets: [1,2] 
+                }]
+            });
+    });
+    
+</script>
+
+{% endblock %}

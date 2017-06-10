@@ -1,0 +1,71 @@
+
+<!DOCTYPE html>
+<html >
+<head>
+  <meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="shortcut icon" type="image/png" href="{{STATIC_URL}}/favicon.png"/>
+  <title>Meeting Room Booking System</title>
+
+      {% load static %}
+	{% block styles %}
+	<link rel="stylesheet" type="text/css" href="{% static 'booking/style.css' %}" />
+	<link rel="stylesheet" type="text/css" href="{% static 'booking/reset.css' %}" />
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+	<!-- Optional theme -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+	{% endblock %}
+
+	{% block js %}
+	<script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+	 <script src="https://code.jquery.com/ui/1.12.0/jquery-ui.js" integrity="sha256-0YPKAwZP7Mp3ALMRVB2i8GXeEndvCq3eSl/WsAl1Ryk=" crossorigin="anonymous"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+	<script type="text/javascript" src="{% static 'booking/date.js' %}"></script>
+	<script type="text/javascript" src="{% static 'booking/moment-with-locales.js' %}"></script>
+	<script type="text/javascript" src="{% static 'booking/moment-timezone-with-data.js' %}"></script>
+	{% endblock %}
+
+	{{ form.media }}
+</head>
+
+<body>
+    <div id="content">
+	<div class="header">
+                    <span id="right-menu">
+                        <table style="float:right">
+                            <tr>
+                                <td><a href="/booking/MyBooking/"> Welcome | {{ user.first_name }} </a></td>
+                                <td><a href="/login/loggedout">Logout</a></td>
+                            </tr>
+                        </table>
+                        {% if user.is_superuser %}
+                        	{% if pending_request > 0 %}
+	                        <br>
+	                        <div id="notification">
+		                        <div>
+		                        	<span id="blink"><a href="/booking/ManageBooking/">You have <b>{{pending_request}}</b> pending request</a></span>
+		                        	<span id='close' onclick='this.parentNode.parentNode.parentNode.removeChild(this.parentNode.parentNode); return false;'>x</span>
+		                        </div>
+		                    </div>
+		                    {% endif %}
+	                    {% endif %}
+                    </span>
+                </div>
+                {% if user.is_superuser %}
+	                <script>
+						$(document).ready(function(){
+							$("#menu4").removeClass('hide');
+							$("#menu5").removeClass('hide');
+						});
+					</script>
+				{% endif %}
+		{% block menu %}
+                
+		{% endblock %}
+		<hr style = "display: block;margin: 0px;border-style: inset; border-width: 5px;border-color:black;">
+			{% block content %}
+		    {% endblock %}
+    </div>
+</body>
+</html>
+

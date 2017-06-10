@@ -1,0 +1,168 @@
+{% extends 'booking/base.html' %}
+{% load render_table from django_tables2 %}
+{% load static %}
+{% block styles %}
+<link rel="stylesheet" type="text/css" href="{% static 'booking/booking.css' %}" />
+
+<style>
+.select2-selection {width: 100%;}
+.select2-dropdown {width: 100% !important; }
+textarea { resize:vertical; }
+</style>
+{{ block.super }}
+{% endblock %}
+
+{% block js %}
+{{ block.super }}
+<script type="text/javascript" src="{% static 'booking/booking.js' %}"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.2.0/jquery-confirm.min.js"></script>
+<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.full.js"></script> -->
+{% endblock %}
+{% block menu %}
+		 <div id="menu">
+			<a id="menu3" href="/booking/ViewCalendar"></a>
+			<a id="menu1" href="/booking/MyBooking"></a>
+			<a id="menu2" href="/booking/NewBooking" class="selected"></a>
+			<a id="menu5" href="/booking/ManageUser" class="hide"></a>
+			<a id="menu4" href="/booking/ManageBooking" class="hide"></a>
+		 </div>
+{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid" style="padding:20px">
+	 <div class="container">
+		<form action="" id="BookingForm" method="post">
+		{% csrf_token %}
+			<div>
+				<div class="panel panel-default">
+					<div class="panel-heading"><h3 class="panel-title">Criteria Filtering</h3></div>
+						<div class="panel-body" style="padding-bottom: 0px;">
+
+						  <div class="bookingRadio">
+							<label class="radio-inline">
+							  <input type="radio" name="BookingRadioOptions" id="inlineRadio1" value="normal_booking" checked> One-Time Booking 
+							</label>
+							<label class="radio-inline">
+							  <input type="radio" name="BookingRadioOptions" id="inlineRadio2" value="recurring_booking"> Recurring Booking
+							</label>
+							<br>
+						  </div>
+
+							<div id="start_date" class="form-group required col-md-12" style="padding:0px">
+							   <label class='control-label' id="prefer_date" for="prefer_date">Date:</label>
+									{{form.prefer_date}}
+							</div> 
+							<div id="end_date" class="form-group required col-md-6 collapse" style="padding-right:0px">
+							   <label class='control-label' for="end_date">End Date:</label>
+									{{form.end_date}}
+							</div>
+							<div class="form-group required col-md-6" style="padding:0px">
+							   <label class='control-label' for="start_time">Start Time:</label>
+									{{form.start_time}}
+							</div>
+							<div class="form-group required col-md-6" style="padding-right:0px">
+							   <label class='control-label' for="end_time">End Time:</label>
+									{{form.end_time}}
+							</div>
+
+							<div class="form-group required">
+							   <label class='control-label' for="title">Title:</label>
+									{{form.title}}
+							</div>
+							<div class="form-group required">
+							   <label class='control-label' for="no_of_attendees">Total no. of attendees: <font size="-2">(Include internal and external if any)</font></label>
+									{{form.no_of_attendees}}
+							</div>
+							<!-- <div class="form-group">
+							   <label for="attendees">Attendees:</label>
+									<br>{{form.attendees}}
+							</div> -->
+							<div class="form-group required col-md-4" style="padding-left:0px">
+							   <label class='control-label' for="involves">Involves:</label>
+									{{form.involves}}
+							</div>
+							<div class="form-group col-md-4">
+							   <label for="equipments">Equipment(s) needed:</label>
+									{{form.equipments}}
+							</div>
+							<div class="form-group col-md-4" style="padding-right:0px">
+							   <label for="highly_confidential">Highly confidential?</label>
+									{{form.highly_confidential}}
+							</div>
+						</div>
+				</div>
+			</div>
+			<div class="panel panel-default">
+				<div class="panel-heading"><h3 class="panel-title">Room prefer</h3></div>
+				<div class="panel-body" style="padding-bottom: 0px;">
+				  {% render_table table %}
+				</div>
+				<input type="submit" id="submit-booking" class="btn btn-info btn-block btn-lg" name="_btnConfirm" value="Confirm Booking" />
+				<!-- <input type="submit" id="search-button" class="btn btn-default btn-block" name="_btnSearch" value="Search" /> -->
+			</div>
+			
+<!-- 			
+			<div id="room-confirmation">
+				<div class="panel panel-default">
+					<div class="panel-heading"><h3 class="panel-title">Booking Confirmation</h3></div>
+					<div class="panel-body">
+						<table style="margin-top: 0px; width: 100%;">
+							<tbody>
+								<tr>
+									<th>Booking ID</th>
+									<th>Date</th>
+									<th>Start Time</th>
+									<th>End Time</th>
+									<th>Room Type</th>
+									<th>Description</th>
+									<th>Attendees</th>
+									<th>Involves</th>
+									<th>Equipment</th>
+									<th>Confidentiality</th>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+				<input type="submit" id="submit-booking" class="btn btn-info btn-block btn-lg disabled" name="_btnConfirm" value="Confirm Booking" />
+			</div> -->
+		</form>
+	</div>
+</div>
+  <!-- Modal -->
+<div class="modal fade" id="successModal" role="dialog">
+  <div class="modal-dialog modal-sm">
+	<div class="modal-content">
+	  <div class="modal-header bg-success" id="booking-model">
+		<button type="button" class="close" data-dismiss="modal">&times;</button>
+		<h4 class="modal-title">Meeting Room Booked</h4>
+	  </div>
+	  <div class="modal-body">
+		<p>Your booking is being processed.</p>
+	  </div>
+	  <div class="modal-footer">
+		<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+	  </div>
+	</div>
+  </div>
+</div>
+
+  <!-- Modal -->
+<div class="modal fade" id="failedModal" role="dialog">
+  <div class="modal-dialog modal-sm">
+	<div class="modal-content">
+	  <div class="modal-header bg-danger" id="booking-model">
+		<button type="button" class="close" data-dismiss="modal">&times;</button>
+		<h4 class="modal-title">Error</h4>
+	  </div>
+	  <div class="modal-body">
+		<p id="errorMsg">Your booking cannot be processed.</p>
+	  </div>
+	  <div class="modal-footer">
+		<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+	  </div>
+	</div>
+  </div>
+</div>
+{% endblock %}

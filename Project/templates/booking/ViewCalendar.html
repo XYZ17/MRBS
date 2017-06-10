@@ -1,0 +1,160 @@
+{% extends 'booking/base.html' %}
+{% load fullcalendar_tags %}
+{% load static %}
+{% block styles %}
+<link rel="stylesheet" type="text/css" href="{% static 'booking/schedule.css' %}" />
+<link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/qtip2/3.0.3/jquery.qtip.min.css"/>
+    {% fullcalendar_css %}
+    {% fullcalendar_print_css %}
+    {% fullcalendar_scheduler_css %}
+{{ block.super }}
+{% endblock %}
+
+{% block js %}
+{{ block.super }}
+<script type="text/javascript" src="//cdn.jsdelivr.net/qtip2/3.0.3/jquery.qtip.min.js"></script>
+{% fullcalendar_moment %}
+    {% fullcalendar_js %}
+    {% fullcalendar_scheduler_js %}
+<style>
+
+#calendar{
+	font-family: Arial, Helvetica, sans-serif;
+}
+.fc-time-grid-event .fc-content{
+	text-align: center;
+}
+
+/*.fc-time-grid-event .fc-time {
+	font-size: 1.50em;
+}*/
+</style>
+{% endblock %}
+
+{% block menu %}
+         <div id="menu">
+            <a id="menu3" href="/booking/ViewCalendar" class="selected"></a>
+            <a id="menu1" href="/booking/MyBooking"></a>
+            <a id="menu2" href="/booking/NewBooking"></a>
+            <a id="menu5" href="/booking/ManageUser" class="hide"></a>
+            <a id="menu4" href="/booking/ManageBooking" class="hide"></a>
+         </div>
+{% endblock %}
+{% block content %}
+<script>
+	$(function() { // document ready
+		$('#calendar').fullCalendar({
+			schedulerLicenseKey: 'CC-Attribution-NonCommercial-NoDerivatives',
+			defaultView: 'agendaDay',
+			slotEventOverlap: false,
+			navLinks: true, // can click day/week names to navigate views
+			now: moment().format('YYYY-MM-DD'),
+			hiddenDays: [0],
+			editable: false, 
+			aspectRatio: 2.8,
+			minTime: '07:00',
+			allDaySlot: false,
+			eventLimit: true, // allow "more" link when too many events
+			titleFormat: 'dddd, DD MMM YYYY',
+			header: {
+				left: 'today prev,next',
+				center: 'title',
+				right: 'agendaDay,agendaThreeDay,agendaWeek,listWeek,month'
+			},
+			views: {
+				agendaThreeDay: {
+					type: 'agenda',
+					duration: { days: 3 },
+					groupByDateAndResource: true,
+				},
+			},
+			resourceLabelText: 'Rooms',
+			resources: [
+				{ id: "S", title: 'Small', eventColor: 'blue'},
+				{ id: "M", title: 'Middle', eventColor: 'green' },
+				{ id: "B", title: 'Big', eventColor: 'orange' },
+			],
+			events: 
+					[	
+					{% if user.is_superuser %}
+						{% for i in booking %}
+                        {	
+			             	resourceId: "{{ i.resourceId }}",
+			                title: "{{ i.title }}",
+			                start: "{{ i.start |date:'Y-m-d H:i'}}",
+			                end: "{{ i.end |date:'Y-m-d H:i'}}",
+			                booked_by: "{{ i.booked_by }}"
+                        },
+			            {% endfor %}
+			        {% else %}
+                        {% for i in booking %}
+                        {   
+                            resourceId: "{{ i.resourceId}}",
+                            start: "{{ i.start |date:'Y-m-d H:i'}}",
+                            end: "{{ i.end |date:'Y-m-d H:i'}}",
+                            booked_by: " "
+                        },
+                        {% endfor %}
+			        {% endif %}        
+	                ],
+	        timeFormat: 'hh:mm a',
+		    eventRender: function(event, element) {
+		    	var content = '<b>Start:</b> '+ moment(event.start).format('ddd Do MM YYYY, h:mm:ss a') +'<br />' + (event.end && '<p><b>End:</b> '+ moment(event.end).format('ddd Do MM YYYY, h:mm:ss a') +'</p>' || '');
+
+            	element.find('.fc-title').append("<br/><span style='font-style: italic'>" + event.booked_by + "</span>"); 
+            	element.qtip({
+            		show: 'click',
+         			hide: {
+			            fixed: true,
+			            delay: 100,
+			            effect: function() {
+			                $(this).slideUp();
+			            }
+			         },
+					content: {
+						text: content,
+						title: event.full_title
+					},
+					position: {
+						my: 'bottom center',
+						at: 'top center',
+						target: 'mouse',
+						adjust: {
+							mouse: false,
+							scroll: false
+						}
+					},
+					style: 'qtip-bootstrap'
+				}).qtip('api');
+			}
+		});
+	});
+</script>
+<div class = "container" style="padding-top:3%; ">
+	
+{% calendar %}
+
+<div class ="legend">
+	<ul>
+	    <li>
+	        <div class="input-color">
+	            <input type="text" value="Independence Room (S)" disabled/>
+	            <div class="color-box" style="background-color: #4040FF;"></div>
+	        </div>
+	    </li>
+	    <li>
+	        <div class="input-color">
+	            <input type="text" value="Intelligence Room (M)" disabled/>
+	            <div class="color-box" style="background-color: #40A040;"></div>
+	        </div>
+	    </li>
+	    <li>
+	        <div class="input-color">
+	            <input type="text" value="Integrity Room (B)" disabled/>
+	            <div class="color-box" style="background-color: #FFBC40;"></div>
+	        </div>
+	    </li>
+	</ul>
+</div> 
+</div>
+{% endblock %}

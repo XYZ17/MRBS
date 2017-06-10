@@ -1,0 +1,54 @@
+/*****************Resource Booking***********/
+.clearBoth {
+    clear:both;
+}
+
+.displayNone {
+    display:none;
+}
+
+#padding20 {
+    padding-left: 10px;
+    padding-right: 10px;
+    min-height: 500px;
+    background-color: #fff;
+}
+
+.resourceLeft {
+    float:left;width:50%;height:70%;
+}
+
+.resourceRight {
+    float:right;width:50%;height:70%;
+}
+
+.clearPadR {
+    padding-right:0px;
+}
+
+.clearPadL {
+    padding-left:0px;
+}
+
+.bookingRadio{
+    display: table;
+    margin: 0 auto;
+    padding-bottom: 20px;
+    font-weight: bold;
+    font-size:larger;
+}
+
+#room-confirmation{
+    display: none;
+}
+
+#booking-model
+{
+    border-top-left-radius: inherit; 
+    border-top-right-radius: inherit;
+}
+
+.form-group.required .control-label:after{
+    color: #d00;
+    content: "*";
+}
